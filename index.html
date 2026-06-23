@@ -202,6 +202,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);min-height:10
   .modal{border-radius:var(--radius);max-height:85vh;}
 }
 </style>
+<link rel="manifest" href="manifest.json">
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+</script>
 </head>
 <body>
 <div class="app">
