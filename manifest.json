@@ -1,0 +1,15 @@
+{
+  "name": "Vignette Study App",
+  "short_name": "Vignette",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0a0e12",
+  "theme_color": "#2a8a8a",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3242/3242257.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
