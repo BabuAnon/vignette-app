@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Vignette</title>
+<style>
+:root{--bg:#0a0e12;--bg2:#0f1318;--bg3:#141920;--bg4:#1a2028;--border:#1e2830;--border2:#263040;--teal:#2a8a8a;--teal2:#3aabab;--teal-dim:#1a5a5a;--teal-glow:rgba(42,138,138,0.08);--ink:#e8f0f4;--ink2:#a8b8c4;--ink3:#607080;--red:#c44a3a;--orange:#c47a2a;--green:#3a8a5a;--yellow:#b8922a;--card-bg:#0d1218;--card-border:#1a2430;--radius:6px;--tab-h:58px;--font:'Georgia','Times New Roman',serif;--mono:'Courier New',monospace;--tap:44px;}
+.paper{--bg:#f0f4f0;--bg2:#e8ece8;--bg3:#e0e6e0;--bg4:#d8dfd8;--border:#c8d4c8;--border2:#b0c0b0;--teal:#1a6a6a;--teal2:#2a8a8a;--teal-dim:#3a9a9a;--teal-glow:rgba(26,106,106,0.08);--ink:#0a1410;--ink2:#304840;--ink3:#607870;--card-bg:#e8ece8;--card-border:#c8d4c8;}
+.dim{--bg:#0e1318;--bg2:#131820;--bg3:#181f28;--bg4:#1e2730;--border:#232d38;--border2:#2d3a48;--teal:#268080;--teal2:#329898;--teal-dim:#184848;--ink:#d0dce4;--ink2:#8898a8;--ink3:#485868;--card-bg:#111820;--card-border:#1c2830;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);min-height:100vh;font-size:15px;line-height:1.6;transition:background .2s,color .2s;}
+.app{display:flex;flex-direction:column;min-height:100vh;}
+.header{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo{font-size:18px;font-weight:bold;letter-spacing:3px;color:var(--teal2);text-transform:uppercase;}
+.logo-sub{font-size:9px;color:var(--ink3);letter-spacing:1.5px;text-transform:uppercase;margin-left:8px;}
+.header-right{display:flex;gap:8px;align-items:center;}
+.hbtn{background:none;border:1px solid var(--border2);color:var(--ink3);padding:0 12px;height:36px;border-radius:var(--radius);cursor:pointer;font-size:11px;letter-spacing:.5px;font-family:var(--font);display:inline-flex;align-items:center;}
+.hbtn:hover{border-color:var(--teal-dim);color:var(--teal2);}
+.hbtn-teal{color:var(--teal);border-color:var(--teal-dim);}
+.content{flex:1;padding:16px 14px 80px;max-width:700px;margin:0 auto;width:100%;}
+.nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);display:flex;height:var(--tab-h);z-index:100;}
+.nav-btn{flex:1;background:none;border:none;color:var(--ink3);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:8px;letter-spacing:.8px;text-transform:uppercase;transition:color .15s;font-family:var(--font);min-height:var(--tap);}
+.nav-btn svg{width:19px;height:19px;}
+.nav-btn.active{color:var(--teal2);}
+.tab{display:none;}.tab.active{display:block;}
+.page-title{font-size:22px;font-weight:bold;color:var(--ink);margin-bottom:3px;}
+.page-sub{font-size:10px;color:var(--ink3);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:16px;}
+.slabel{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);margin-bottom:7px;margin-top:18px;}
+.card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:14px;margin-bottom:10px;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 18px;height:44px;border-radius:var(--radius);font-size:13px;font-family:var(--font);cursor:pointer;border:none;transition:all .15s;letter-spacing:.3px;}
+.btn-p{background:var(--teal);color:#fff;font-weight:bold;}.btn-p:hover{background:var(--teal2);}
+.btn-s{background:none;border:1px solid var(--border2);color:var(--ink2);}.btn-s:hover{border-color:var(--teal-dim);color:var(--teal2);}
+.btn-g{background:none;border:none;color:var(--ink3);padding:0 10px;height:44px;}.btn-g:hover{color:var(--ink);}
+.btn-sm{height:36px;padding:0 12px;font-size:12px;}
+.btn-full{width:100%;}
+.del-btn{background:none;border:none;color:var(--red);cursor:pointer;width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;font-size:20px;border-radius:var(--radius);flex-shrink:0;}
+.del-btn:hover{background:rgba(196,74,58,0.12);}
+.input,.textarea,.select{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--ink);padding:10px 12px;border-radius:var(--radius);font-family:var(--font);font-size:14px;outline:none;transition:border-color .15s;}
+.input:focus,.textarea:focus,.select:focus{border-color:var(--teal-dim);}
+.textarea{resize:vertical;min-height:80px;line-height:1.6;}
+.select option{background:var(--bg3);}
+.field{margin-bottom:14px;}
+.flabel{font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--teal);margin-bottom:6px;display:block;}
+.fhint{font-size:12px;color:var(--ink3);margin-top:4px;}
+.badge{display:inline-block;padding:3px 8px;border-radius:10px;font-size:11px;}
+.b-new{background:var(--bg4);color:var(--ink3);}
+.b-prog{background:#0a2018;color:#4a9a6a;border:1px solid #1a3a28;}
+.b-rev{background:#2a1800;color:#c87a30;border:1px solid #4a3010;}
+.b-conf{background:#081820;color:#4a8aaa;border:1px solid #1a3a5a;}
+.hy-badge{background:#1a1800;color:#b8922a;border:1px solid #3a3000;font-size:9px;padding:2px 7px;border-radius:8px;display:inline-block;margin-left:5px;vertical-align:middle;}
+/* GAMIFICATION */
+.gam-row{display:flex;gap:8px;margin-bottom:14px;}
+.gam-box{flex:1;background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:12px;text-align:center;}
+.gam-num{font-size:24px;font-weight:bold;color:var(--teal2);font-family:var(--mono);}
+.gam-label{font-size:9px;color:var(--ink3);letter-spacing:.8px;text-transform:uppercase;margin-top:2px;}
+.clr-bar{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:12px;}
+.clr-title{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--teal);margin-bottom:6px;}
+.clr-track{height:8px;background:var(--border2);border-radius:4px;overflow:hidden;margin-bottom:5px;}
+.clr-fill{height:100%;background:var(--teal);border-radius:4px;transition:width .4s;}
+.clr-nums{font-size:11px;color:var(--ink3);display:flex;justify-content:space-between;}
+/* TREE */
+.node-item{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);margin-bottom:4px;}
+.node-hdr{display:flex;align-items:center;padding:10px 10px;gap:8px;min-height:var(--tap);}
+.node-tog{background:none;border:none;color:var(--ink3);cursor:pointer;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:4px;flex-shrink:0;font-size:11px;transition:transform .15s;}
+.node-tog.open{transform:rotate(90deg);}
+.node-info{flex:1;min-width:0;}
+.node-name{font-size:13px;color:var(--ink);}
+.node-meta{font-size:10px;color:var(--ink3);margin-top:1px;}
+.node-acts{display:flex;align-items:center;gap:2px;flex-shrink:0;}
+.node-children{padding-left:14px;border-left:2px solid var(--border2);margin-left:15px;margin-bottom:6px;padding-top:4px;}
+.add-child-btn{background:none;border:1px dashed var(--border2);color:var(--ink3);padding:8px 12px;border-radius:var(--radius);cursor:pointer;font-size:11px;font-family:var(--font);width:100%;text-align:left;margin-top:4px;margin-bottom:2px;min-height:36px;}
+.add-child-btn:hover{border-color:var(--teal-dim);color:var(--teal);}
+.subj-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:14px;margin-bottom:10px;}
+.subj-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:8px;}
+.subj-name{font-size:15px;font-weight:bold;color:var(--ink);}
+.subj-meta{font-size:11px;color:var(--ink3);margin-top:2px;}
+.prog-bar{height:3px;background:var(--border2);border-radius:2px;margin:8px 0;overflow:hidden;}
+.prog-fill{height:100%;background:var(--teal);border-radius:2px;transition:width .3s;}
+/* ENERGY */
+.energy-row{display:flex;gap:8px;margin-bottom:14px;}
+.energy-btn{flex:1;padding:10px 8px;border-radius:var(--radius);border:1px solid var(--border2);background:none;color:var(--ink2);cursor:pointer;font-size:12px;font-family:var(--font);text-align:center;transition:all .15s;min-height:60px;}
+.e-high{border-color:var(--green);color:var(--green);background:#081408;}
+.e-med{border-color:var(--orange);color:var(--orange);background:#180e00;}
+.e-low{border-color:var(--ink3);color:var(--ink3);background:var(--bg3);}
+/* SCHED */
+.sched-item{display:flex;align-items:center;justify-content:space-between;padding:11px 12px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);margin-bottom:6px;cursor:pointer;transition:border-color .15s;min-height:var(--tap);}
+.sched-item:hover{border-color:var(--teal-dim);}
+.sched-l{flex:1;min-width:0;}
+.sched-name{font-size:13px;color:var(--ink);}
+.sched-meta{font-size:10px;color:var(--ink3);}
+.t-over{font-size:9px;padding:3px 7px;border-radius:8px;background:#2a0808;color:var(--red);border:1px solid #4a1818;}
+.t-due{font-size:9px;padding:3px 7px;border-radius:8px;background:var(--bg4);color:var(--ink3);}
+.t-new{font-size:9px;padding:3px 7px;border-radius:8px;background:#081808;color:#4a9a6a;border:1px solid #1a3a20;}
+.t-v{font-size:9px;padding:3px 7px;border-radius:8px;background:#081820;color:#4a8aaa;border:1px solid #1a3a5a;}
+.t-k{font-size:9px;padding:3px 7px;border-radius:8px;background:var(--bg4);color:var(--ink3);}
+.timer-display{font-size:32px;font-weight:bold;color:var(--teal2);letter-spacing:4px;font-family:var(--mono);text-align:center;margin:12px 0;}
+.ratio-bar{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 13px;margin-bottom:12px;}
+.ratio-title{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--teal);margin-bottom:6px;}
+.ratio-track{height:7px;background:var(--border2);border-radius:4px;overflow:hidden;margin-bottom:5px;display:flex;}
+.ratio-k{height:100%;background:var(--teal);transition:width .3s;}
+.ratio-v{height:100%;background:var(--yellow);transition:width .3s;}
+.ratio-leg{display:flex;gap:12px;font-size:10px;}
+.rk{color:var(--teal);}.rv{color:var(--yellow);}
+.inotice{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:12px;font-size:12px;color:var(--ink3);line-height:1.5;}
+.inotice strong{color:var(--teal);}
+/* VIGNETTE */
+.vfront{background:var(--card-bg);border:1px solid var(--teal-dim);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
+.vslabel{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);margin-bottom:4px;}
+.vstext{font-size:14px;color:var(--ink);line-height:1.65;}
+.vsfinds{background:var(--bg3);border-radius:var(--radius);padding:10px;margin-top:4px;}
+.find-item{font-size:13px;color:var(--ink2);padding:4px 0;border-bottom:1px solid var(--border);display:flex;gap:8px;}
+.find-item:last-child{border:none;}
+.find-dot{color:var(--teal);font-size:10px;margin-top:4px;}
+.qstem{font-size:15px;font-weight:bold;color:var(--ink);font-style:italic;margin-top:10px;line-height:1.5;}
+.ans-rev{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:14px;margin-bottom:12px;display:none;}
+.ans-rev.shown{display:block;}
+.ar-lbl{font-size:8px;letter-spacing:1.2px;text-transform:uppercase;color:var(--teal);margin-bottom:4px;}
+.ar-ans{font-size:15px;font-weight:bold;color:var(--ink);margin-bottom:8px;}
+.ar-reas{font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:8px;}
+.ar-kf{font-size:13px;color:var(--teal2);font-style:italic;padding:7px 10px;background:var(--teal-glow);border-radius:var(--radius);border-left:2px solid var(--teal);margin-bottom:8px;}
+.distr-box{background:#1a0808;border:1px solid #3a1818;border-radius:var(--radius);padding:10px;}
+.distr-lbl{font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--red);margin-bottom:4px;}
+.distr-txt{font-size:12px;color:#c88080;line-height:1.5;}
+/* RATING */
+.rate-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.check-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);margin-bottom:8px;min-height:var(--tap);}
+.check-lbl{font-size:13px;color:var(--ink2);flex:1;margin-right:12px;}
+.check-btns{display:flex;gap:8px;}
+.cy,.cn{padding:0 14px;height:36px;border-radius:var(--radius);background:none;cursor:pointer;font-size:12px;font-family:var(--font);transition:all .15s;display:inline-flex;align-items:center;}
+.cy{border:1px solid var(--green);color:var(--green);}.cy.active{background:#081408;}
+.cn{border:1px solid var(--red);color:var(--red);}.cn.active{background:#180808;}
+.rate-btn{padding:12px 10px;border-radius:var(--radius);border:1px solid var(--border2);background:none;cursor:pointer;font-family:var(--font);transition:all .15s;text-align:left;min-height:var(--tap);}
+.r-title{font-size:13px;font-weight:bold;margin-bottom:3px;}
+.r-sub{font-size:11px;color:var(--ink3);}
+.r-bl{border-color:var(--red);}.r-bl .r-title{color:var(--red);}.r-bl:hover{background:#180808;}
+.r-mi{border-color:var(--orange);}.r-mi .r-title{color:var(--orange);}.r-mi:hover{background:#180c00;}
+.r-pa{border-color:var(--teal-dim);}.r-pa .r-title{color:var(--teal);}.r-pa:hover{background:#081010;}
+.r-gi{border-color:var(--green);}.r-gi .r-title{color:var(--green);}.r-gi:hover{background:#081408;}
+/* PROCESS */
+.pstep{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:14px;margin-bottom:10px;}
+.ps-num{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);margin-bottom:5px;}
+.ps-title{font-size:14px;font-weight:bold;color:var(--ink);margin-bottom:3px;}
+.ps-desc{font-size:12px;color:var(--ink3);margin-bottom:10px;line-height:1.5;}
+.ps-done{border-color:var(--green);}.ps-done .ps-num{color:var(--green);}
+.prior-box{background:var(--bg3);border:1px solid var(--teal-dim);border-radius:var(--radius);padding:14px;margin-bottom:14px;}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:flex-end;justify-content:center;z-index:200;padding:0;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius) var(--radius) 0 0;padding:20px 16px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;}
+.modal-title{font-size:16px;font-weight:bold;color:var(--ink);margin-bottom:16px;}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;}
+/* REVIEW */
+.rev-q{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:14px;margin-bottom:10px;}
+.rq-lbl{font-size:9px;letter-spacing:1.2px;color:var(--teal);text-transform:uppercase;margin-bottom:5px;}
+.rq-txt{font-size:13px;color:var(--ink);margin-bottom:10px;}
+.cvp-box{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:14px;margin-bottom:14px;}
+.cvp-title{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--teal);margin-bottom:10px;}
+.cvp-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.cvp-row:last-child{border:none;}
+.stats-row{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px;}
+.stat-box{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:12px;text-align:center;}
+.stat-num{font-size:22px;font-weight:bold;color:var(--teal2);}
+.stat-lbl{font-size:10px;color:var(--ink3);}
+.cd-bar{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 13px;display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;min-height:var(--tap);}
+.cd-subj{font-size:13px;color:var(--ink2);}
+.cd-days{font-size:13px;font-weight:bold;}
+.cd-urg{color:var(--red);}.cd-soon{color:var(--orange);}.cd-ok{color:var(--teal2);}
+.onboard{background:var(--bg2);border:1px solid var(--teal-dim);border-radius:var(--radius);padding:18px;margin-bottom:18px;}
+.ob-title{font-size:16px;font-weight:bold;color:var(--teal2);margin-bottom:10px;}
+.ob-text{font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;}
+.gt-box{background:#1a1800;border:1px solid #3a3000;border-radius:var(--radius);padding:12px;margin-bottom:12px;}
+.gt-title{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--yellow);margin-bottom:5px;}
+.gt-text{font-size:12px;color:#907020;line-height:1.5;}
+.cd-num{font-size:40px;font-weight:bold;font-family:var(--mono);letter-spacing:2px;}
+.cd-ok2{color:var(--teal2);}.cd-warn{color:var(--orange);}.cd-danger{color:var(--red);}
+.empty{text-align:center;padding:40px 20px;color:var(--ink3);font-size:13px;line-height:1.7;}
+.empty-icon{font-size:30px;margin-bottom:12px;opacity:.4;}
+/* GUIDE */
+.guide-ov{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;z-index:300;overflow-y:auto;}
+.guide-ov.open{display:block;}
+.guide-inner{background:var(--bg2);max-width:680px;margin:0 auto;min-height:100vh;padding:20px 16px 40px;}
+.g-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.g-title{font-size:20px;font-weight:bold;color:var(--teal2);}
+.g-close{background:none;border:1px solid var(--border2);color:var(--ink3);padding:0 14px;height:40px;border-radius:var(--radius);cursor:pointer;font-size:13px;font-family:var(--font);}
+.g-sec{margin-bottom:28px;}
+.g-sec-title{font-size:13px;font-weight:bold;color:var(--teal2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid var(--border);}
+.g-text{font-size:13px;color:var(--ink2);line-height:1.75;margin-bottom:8px;}
+.g-call{background:var(--bg3);border-left:3px solid var(--teal);padding:10px 12px;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:10px;}
+.g-call-title{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--teal);margin-bottom:4px;}
+.g-call-text{font-size:13px;color:var(--ink2);line-height:1.65;}
+.g-warn{background:#1a0e00;border-left:3px solid var(--orange);padding:10px 12px;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:10px;}
+.g-warn-text{font-size:13px;color:#b07830;line-height:1.65;}
+.g-step{display:flex;gap:10px;margin-bottom:10px;}
+.g-step-num{font-size:12px;font-weight:bold;color:var(--teal2);min-width:24px;}
+.g-step-text{font-size:13px;color:var(--ink2);line-height:1.7;}
+.g-step-text strong{color:var(--ink);}
+@media(min-width:640px){
+  .rate-grid{grid-template-columns:repeat(4,1fr);}
+  .stats-row{grid-template-columns:repeat(4,1fr);}
+  .modal-overlay{align-items:center;padding:16px;}
+  .modal{border-radius:var(--radius);max-height:85vh;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div style="display:flex;align-items:baseline"><div class="logo">Vignette</div><div class="logo-sub">NEET PG · INICET</div></div>
+    <div class="header-right">
+      <button class="hbtn hbtn-teal" onclick="openGuide()">Guide</button>
+      <button class="hbtn" onclick="cycleTheme()">Theme</button>
+    </div>
+  </div>
+  <div class="content">
+
+    <!-- SUBJECTS -->
+    <div class="tab active" id="tab-subjects">
+      <div class="page-title">Subjects</div>
+      <div class="page-sub">Your clinical map</div>
+      <div id="subjects-onboard" class="onboard">
+        <div class="ob-title">Built for NEET PG and INICET.</div>
+        <div class="ob-text">Two card types. <strong style="color:var(--teal2)">Knowledge cards</strong> for facts and mechanisms. <strong style="color:var(--yellow)">Vignette cards</strong> for patient scenarios that mirror the exam format.<br><br>Sequence: <strong style="color:var(--teal2)">Process → Cards → Retrieve.</strong> Cannot be skipped.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-p btn-sm" onclick="dismissOnboard()">Understood</button>
+          <button class="btn btn-s btn-sm" onclick="openGuide()">Read the Guide</button>
+        </div>
+      </div>
+      <div id="exam-countdowns"></div>
+      <div id="subjects-list"></div>
+      <button class="btn btn-s btn-full" onclick="openModal('modal-add-subject')" style="margin-top:8px">+ Add Subject</button>
+    </div>
+
+    <!-- SESSION -->
+    <div class="tab" id="tab-session">
+      <div class="page-title">Session</div>
+      <div class="page-sub">Today's work</div>
+      <div class="gam-row">
+        <div class="gam-box"><div class="gam-num" id="streak-count">0</div><div class="gam-label">🔥 Streak</div></div>
+        <div class="gam-box"><div class="gam-num" id="weekly-pct">0%</div><div class="gam-label">Weekly Cleared</div></div>
+        <div class="gam-box"><div class="gam-num" id="total-cards">0</div><div class="gam-label">Total Cards</div></div>
+      </div>
+      <div class="clr-bar" id="clr-bar" style="display:none">
+        <div class="clr-title">Today's due cards cleared</div>
+        <div class="clr-track"><div class="clr-fill" id="clr-fill" style="width:0%"></div></div>
+        <div class="clr-nums"><span id="clr-done">0 done</span><span id="clr-total">0 due today</span></div>
+      </div>
+      <div class="slabel">Energy Check-In</div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;color:var(--ink2);margin-bottom:10px">What is your energy level right now?</div>
+        <div class="energy-row">
+          <button class="energy-btn" id="e-high" onclick="setEnergy('high')">⬆ High<br><span style="font-size:11px;color:var(--ink3)">New material</span></button>
+          <button class="energy-btn" id="e-med" onclick="setEnergy('med')">→ Medium<br><span style="font-size:11px;color:var(--ink3)">Revise</span></button>
+          <button class="energy-btn" id="e-low" onclick="setEnergy('low')">⬇ Low<br><span style="font-size:11px;color:var(--ink3)">Easy only</span></button>
+        </div>
+        <div id="energy-rec" style="font-size:12px;color:var(--ink3);padding-top:8px;border-top:1px solid var(--border);display:none"></div>
+      </div>
+      <div id="ratio-bar-wrap" style="display:none">
+        <div class="ratio-bar">
+          <div class="ratio-title">Recommended session ratio</div>
+          <div class="ratio-track"><div class="ratio-k" id="rk" style="width:50%"></div><div class="ratio-v" id="rv" style="width:50%"></div></div>
+          <div class="ratio-leg"><span class="rk" id="rk-lbl">Knowledge 50%</span><span class="rv" id="rv-lbl">Vignette 50%</span></div>
+          <div style="font-size:11px;color:var(--ink3);margin-top:5px" id="ratio-reason"></div>
+        </div>
+      </div>
+      <div class="inotice"><strong>Subjects are interleaved by urgency.</strong> NEET PG tests all subjects simultaneously. Do not reorder. The mix is the mechanism.</div>
+      <div class="slabel">Session Timer</div>
+      <div class="timer-display" id="session-timer">00:00:00</div>
+      <div style="display:flex;gap:8px;margin-bottom:18px;justify-content:center">
+        <button class="btn btn-s btn-sm" id="timer-btn" onclick="toggleTimer()">Start Session</button>
+        <button class="btn btn-g btn-sm" onclick="resetTimer()">Reset</button>
+      </div>
+      <div class="slabel">Today's Schedule</div>
+      <div id="session-sched"></div>
+    </div>
+
+    <!-- PROCESS -->
+    <div class="tab" id="tab-process">
+      <div class="page-title">Process</div>
+      <div class="page-sub">Before you create cards</div>
+      <div class="card" style="margin-bottom:14px;border-color:var(--teal-dim)">
+        <div style="font-size:13px;color:var(--ink2);line-height:1.6">Cards built on memorisation fail under exam pressure. Cards built on understanding hold.<br><br>Answer all four clinical questions for a node before creating any cards for it.</div>
+      </div>
+      <div class="field">
+        <label class="flabel">Select Node</label>
+        <select class="select" id="proc-node" onchange="loadProcState()"><option value="">— Choose a topic or subtopic —</option></select>
+      </div>
+      <div id="proc-prior" style="display:none">
+        <div class="prior-box">
+          <div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--teal);margin-bottom:5px">Before you begin — Prior Knowledge</div>
+          <div style="font-size:12px;color:var(--ink2);margin-bottom:10px;line-height:1.5">What do you already know from MBBS and internship? Any cases you have seen?</div>
+          <textarea class="textarea" id="prior-k" placeholder="What I already know... Cases I have seen..." style="min-height:65px"></textarea>
+        </div>
+      </div>
+      <div id="proc-steps" style="display:none">
+        <div class="pstep" id="ps1"><div class="ps-num">Clinical Question 01 — Pathophysiology</div><div class="ps-title">What is actually happening in the body?</div><div class="ps-desc">Not the name. The mechanism — cellular, physiological, or biochemical.</div><textarea class="textarea" id="ps1-txt" placeholder="The mechanism is..."></textarea></div>
+        <div class="pstep" id="ps2"><div class="ps-num">Clinical Question 02 — The Differentiator</div><div class="ps-title">What distinguishes this from the most common alternative?</div><div class="ps-desc">One finding. Know the differentiator and you survive the distractors.</div><textarea class="textarea" id="ps2-txt" placeholder="The key differentiator is..."></textarea></div>
+        <div class="pstep" id="ps3"><div class="ps-num">Clinical Question 03 — Investigation of Choice</div><div class="ps-title">One investigation. What does it show?</div><div class="ps-desc">Not a list. One investigation, one specific finding.</div><textarea class="textarea" id="ps3-txt" placeholder="Investigation of choice: ..."></textarea></div>
+        <div class="pstep" id="ps4"><div class="ps-num">Clinical Question 04 — Management Pivot</div><div class="ps-title">Standard management — and when does it change?</div><div class="ps-desc">NEET PG loves the edge case. Know the exception.</div><textarea class="textarea" id="ps4-txt" placeholder="Standard: ... Changes when: ..."></textarea></div>
+        <button class="btn btn-p btn-full" onclick="saveProc()" style="margin-top:8px">Complete Processing → Unlock Cards</button>
+      </div>
+    </div>
+
+    <!-- CARDS -->
+    <div class="tab" id="tab-cards">
+      <div class="page-title">Cards</div>
+      <div class="page-sub">Knowledge and vignette</div>
+      <div class="field">
+        <label class="flabel">Node</label>
+        <select class="select" id="cards-node" onchange="loadCardsNode()"><option value="">— Choose a node —</option></select>
+      </div>
+      <!-- Processing reference panel -->
+      <div id="proc-ref-panel" style="display:none;margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div style="font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--teal)">Your Processing Notes</div>
+          <button onclick="document.getElementById('proc-ref-body').style.display=document.getElementById('proc-ref-body').style.display==='none'?'block':'none'" style="background:none;border:none;color:var(--ink3);font-size:11px;cursor:pointer;font-family:var(--font)">Toggle</button>
+        </div>
+        <div id="proc-ref-body" style="background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:12px;"></div>
+      </div>
+      <div id="cards-gate" class="card" style="border-color:var(--orange);display:none">
+        <div style="font-size:13px;color:var(--orange);margin-bottom:6px;font-weight:bold">Processing required first.</div>
+        <div style="font-size:13px;color:var(--ink2)">Complete the four clinical questions for this node.</div>
+        <button class="btn btn-s btn-sm" onclick="switchTab('process')" style="margin-top:8px">→ Go to Process</button>
+      </div>
+      <div id="cards-create" style="display:none">
+        <div style="display:flex;gap:8px;margin-bottom:14px">
+          <button class="btn btn-s" id="ct-k" onclick="setCardType('k')">Knowledge Card</button>
+          <button class="btn btn-s" id="ct-v" onclick="setCardType('v')">Vignette Card</button>
+        </div>
+        <div id="form-k" style="display:none">
+          <div class="card" style="margin-bottom:12px;border-color:var(--border2)"><div style="font-size:12px;color:var(--ink3);line-height:1.5"><strong style="color:var(--teal)">Atomic</strong> — one idea. <strong style="color:var(--teal)">Holistic</strong> — integrate before encoding. <strong style="color:var(--teal)">Future-proof</strong> — understandable in 6 months.</div></div>
+          <div class="field"><label class="flabel">Question</label><textarea class="textarea" id="k-q" placeholder="Why does X happen? One specific idea." style="min-height:70px"></textarea></div>
+          <div class="field"><label class="flabel">Answer</label><textarea class="textarea" id="k-a" placeholder="Concise. Your words." style="min-height:60px"></textarea></div>
+          <div class="field"><label class="flabel">Context <span style="color:var(--red)">*required</span></label><textarea class="textarea" id="k-ctx" placeholder="What existing knowledge does this connect to?" style="min-height:60px"></textarea></div>
+          <button class="btn btn-p btn-full" onclick="addKCard()">Add Knowledge Card</button>
+        </div>
+        <div id="form-v" style="display:none">
+          <div class="card" style="margin-bottom:12px;border-color:var(--teal-dim)"><div style="font-size:12px;color:var(--ink3);line-height:1.5">Build the scenario to mirror NEET PG format. Findings should activate the correct answer <em>and</em> the most common wrong answer.</div></div>
+          <div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--teal);margin-bottom:8px">Scenario — Front</div>
+          <div class="field"><label class="flabel">Patient Profile</label><input class="input" id="v-pat" placeholder="Age, sex, occupation if relevant."></div>
+          <div class="field"><label class="flabel">Presenting Complaint</label><input class="input" id="v-comp" placeholder="What brought them in and for how long."></div>
+          <div class="field"><label class="flabel">Key Findings <span style="color:var(--ink3);font-size:10px">(one per line)</span></label><textarea class="textarea" id="v-finds" placeholder="Finding 1&#10;Finding 2&#10;Finding 3" style="min-height:80px"></textarea></div>
+          <div class="field"><label class="flabel">Question Stem</label><input class="input" id="v-qstem" placeholder="Most likely diagnosis / Investigation of choice / Drug of choice..."></div>
+          <div class="field"><label class="flabel">Time Target (seconds)</label><input class="input" type="number" id="v-time" value="60" min="15" max="180"><div class="fhint">NEET PG ≈ 60s. INICET ≈ 45s.</div></div>
+          <div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--teal);margin-bottom:8px;margin-top:14px">Answer — Back</div>
+          <div class="field"><label class="flabel">Answer</label><input class="input" id="v-ans" placeholder="The correct answer."></div>
+          <div class="field"><label class="flabel">Reasoning <span style="color:var(--red)">*required</span></label><textarea class="textarea" id="v-reas" placeholder="Why this and not the most common wrong answer." style="min-height:70px"></textarea></div>
+          <div class="field"><label class="flabel">Key Fact</label><input class="input" id="v-kf" placeholder="The one fact that anchors this card."></div>
+          <div class="field"><label class="flabel">Distractor Logic <span style="color:var(--red)">*required</span></label><textarea class="textarea" id="v-distr" placeholder="Why is the most common wrong answer wrong? What specific feature rules it out?" style="min-height:65px"></textarea><div class="fhint">This is shown after every reveal — even when correct. It is the most important field.</div></div>
+          <button class="btn btn-p btn-full" onclick="addVCard()">Add Vignette Card</button>
+        </div>
+      </div>
+      <div id="cards-list" style="margin-top:14px"></div>
+    </div>
+
+    <!-- RETRIEVE -->
+    <div class="tab" id="tab-retrieve">
+      <div class="page-title">Retrieve</div>
+      <div class="page-sub">The actual work</div>
+      <div id="ret-empty" class="empty"><div class="empty-icon">◇</div><div>Nothing due right now.</div></div>
+      <div id="ret-session" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div style="font-size:12px;color:var(--ink3)" id="ret-prog"></div>
+          <button class="btn btn-g btn-sm" onclick="endRetrieve()">End Session</button>
+        </div>
+        <div id="ret-card-view">
+          <div id="rv-k" style="display:none">
+            <div style="font-size:9px;letter-spacing:1.2px;color:var(--teal);text-transform:uppercase;margin-bottom:8px" id="rv-k-topic"></div>
+            <div style="font-size:9px;padding:3px 8px;border-radius:8px;background:var(--bg4);color:var(--ink3);display:inline-block;margin-bottom:10px">KNOWLEDGE</div>
+            <div class="card" style="margin-bottom:12px"><div style="font-size:15px;color:var(--ink);line-height:1.65;font-style:italic" id="rv-k-q"></div></div>
+            <textarea class="textarea" id="rv-k-resp" placeholder="Write everything you recall. No notes. The effort is the mechanism." style="min-height:100px"></textarea>
+            <button class="btn btn-s btn-full" onclick="showKAns()" style="margin-top:10px">Reveal Answer</button>
+            <div class="ans-rev" id="rv-k-ans">
+              <div class="ar-lbl">Answer</div><div class="ar-ans" id="rv-k-ans-txt"></div>
+              <div class="ar-lbl" style="margin-top:8px">Context</div><div class="ar-reas" id="rv-k-ctx-txt"></div>
+            </div>
+            <div id="rv-k-rate" style="display:none">
+              <div class="slabel">How did you do?</div>
+              <div class="rate-grid">
+                <button class="rate-btn r-bl" onclick="rateK(0)"><div class="r-title">Blackout</div><div class="r-sub">Nothing. Resets to day 1.</div></button>
+                <button class="rate-btn r-mi" onclick="rateK(2)"><div class="r-title">Missed It</div><div class="r-sub">Fragments only. Resets.</div></button>
+                <button class="rate-btn r-pa" onclick="rateK(3)"><div class="r-title">Partial</div><div class="r-sub">Key ideas, missed details.</div></button>
+                <button class="rate-btn r-gi" onclick="rateK(5)"><div class="r-title">Got It</div><div class="r-sub">Full recall. Confident.</div></button>
+              </div>
+            </div>
+          </div>
+          <div id="rv-v" style="display:none">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <div style="font-size:9px;letter-spacing:1.2px;color:var(--teal);text-transform:uppercase" id="rv-v-topic"></div>
+              <div style="font-size:9px;padding:3px 8px;border-radius:8px;background:#081820;color:#4a8aaa;border:1px solid #1a3a5a">VIGNETTE</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <div style="font-size:12px;color:var(--ink3)">Time target</div>
+              <div class="cd-num cd-ok2" id="rv-v-cd">60</div>
+            </div>
+            <div class="vfront">
+              <div style="margin-bottom:10px"><div class="vslabel">Patient</div><div class="vstext" id="rv-v-pat"></div></div>
+              <div style="margin-bottom:10px"><div class="vslabel">Presenting Complaint</div><div class="vstext" id="rv-v-comp"></div></div>
+              <div style="margin-bottom:10px"><div class="vslabel">Key Findings</div><div class="vsfinds" id="rv-v-finds"></div></div>
+              <div class="qstem" id="rv-v-qstem"></div>
+            </div>
+            <textarea class="textarea" id="rv-v-resp" placeholder="Write your answer and reasoning. Do not look anything up." style="min-height:90px"></textarea>
+            <button class="btn btn-s btn-full" onclick="showVAns()" style="margin-top:10px">I have written my answer — reveal</button>
+            <div class="ans-rev" id="rv-v-ans">
+              <div class="ar-lbl">Answer</div><div class="ar-ans" id="rv-v-ans-txt"></div>
+              <div class="ar-lbl" style="margin-top:8px">Reasoning</div><div class="ar-reas" id="rv-v-reas-txt"></div>
+              <div class="ar-kf" id="rv-v-kf-txt"></div>
+              <div class="distr-box"><div class="distr-lbl">Distractor Logic — always read this</div><div class="distr-txt" id="rv-v-distr"></div></div>
+            </div>
+            <div id="rv-v-rate" style="display:none">
+              <div class="slabel" style="margin-top:12px">Three-check rating</div>
+              <div class="check-row"><div class="check-lbl">Got the answer correct?</div><div class="check-btns"><button class="cy" id="ca-y" onclick="setCheck('a',true)">Yes</button><button class="cn" id="ca-n" onclick="setCheck('a',false)">No</button></div></div>
+              <div class="check-row"><div class="check-lbl">Got the reasoning — could explain why this and not the common alternative?</div><div class="check-btns"><button class="cy" id="cr-y" onclick="setCheck('r',true)">Yes</button><button class="cn" id="cr-n" onclick="setCheck('r',false)">No</button></div></div>
+              <div class="check-row"><div class="check-lbl">Arrived within time target?</div><div class="check-btns"><button class="cy" id="ct-y" onclick="setCheck('t',true)">Yes</button><button class="cn" id="ct-n" onclick="setCheck('t',false)">No</button></div></div>
+              <button class="btn btn-p btn-full" onclick="submitVRate()" style="margin-top:10px">Submit Rating</button>
+            </div>
+          </div>
+        </div>
+        <div id="ret-done" style="display:none;text-align:center;padding:40px 0">
+          <div style="font-size:28px;color:var(--teal2);margin-bottom:10px">◆</div>
+          <div style="font-size:16px;color:var(--ink);margin-bottom:5px">Session complete.</div>
+          <div style="font-size:13px;color:var(--ink3);margin-bottom:20px" id="ret-summary"></div>
+          <button class="btn btn-s" onclick="endRetrieve()">Back</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- REVIEW -->
+    <div class="tab" id="tab-review">
+      <div class="page-title">Weekly Review</div>
+      <div class="page-sub">Honest accounting</div>
+      <div class="stats-row" id="review-stats"></div>
+      <div class="slabel">Confidence vs Performance Gap</div>
+      <div class="cvp-box">
+        <div class="cvp-title">Self-rated vs Actual FSRS Performance</div>
+        <div id="cvp-rows"><div style="font-size:13px;color:var(--ink3)">Complete retrievals to see gap analysis.</div></div>
+        <div style="font-size:12px;color:var(--ink3);margin-top:10px;line-height:1.5">If self-confidence exceeds actual performance, that is the illusion of mastery.</div>
+      </div>
+      <div class="gt-box"><div class="gt-title">Grand Test Reminder</div><div class="gt-text">Have you done a full-length timed mock this week? Vignette handles daily retrieval. Grand tests handle full-exam simulation. Both are necessary.</div></div>
+      <div class="rev-q"><div class="rq-lbl">Question 01</div><div class="rq-txt">What did you actually study this week vs what you planned?</div><textarea class="textarea" id="rq1" placeholder="Not a guilt exercise. A calibration."></textarea></div>
+      <div class="rev-q"><div class="rq-lbl">Question 02</div><div class="rq-txt">Which subjects are you avoiding — and which have no vignette cards?</div><textarea class="textarea" id="rq2" placeholder="Avoidance is data."></textarea></div>
+      <div class="rev-q"><div class="rq-lbl">Question 03</div><div class="rq-txt">Your honest confidence per subject — not what the data says, what do you believe?</div><textarea class="textarea" id="rq3" placeholder="Compare to gap analysis above."></textarea></div>
+      <div class="rev-q"><div class="rq-lbl">Question 04</div><div class="rq-txt">One topic to prioritise next week.</div><textarea class="textarea" id="rq4" placeholder="One. Not a list."></textarea></div>
+      <button class="btn btn-p btn-full" onclick="saveReview()" style="margin-top:4px">Save Review</button>
+      <div id="rev-saved" style="display:none;text-align:center;font-size:13px;color:var(--green);margin-top:10px">Saved.</div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <button class="nav-btn active" id="nav-subjects" onclick="switchTab('subjects')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Subjects</button>
+    <button class="nav-btn" id="nav-session" onclick="switchTab('session')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>Session</button>
+    <button class="nav-btn" id="nav-process" onclick="switchTab('process')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>Process</button>
+    <button class="nav-btn" id="nav-cards" onclick="switchTab('cards')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Cards</button>
+    <button class="nav-btn" id="nav-retrieve" onclick="switchTab('retrieve')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Retrieve</button>
+    <button class="nav-btn" id="nav-review" onclick="switchTab('review')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>Review</button>
+  </nav>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-add-subject">
+  <div class="modal">
+    <div class="modal-title">Add Subject</div>
+    <div class="field"><label class="flabel">Subject</label>
+      <select class="select" id="subj-name">
+        <option value="">— Select —</option>
+        <option>Medicine</option><option>Surgery</option><option>Obstetrics & Gynaecology</option>
+        <option>Paediatrics</option><option>Pathology</option><option>Pharmacology</option>
+        <option>Microbiology</option><option>Forensic Medicine</option><option>ENT</option>
+        <option>Ophthalmology</option><option>Orthopaedics</option><option>Anaesthesia</option>
+        <option>Dermatology</option><option>Psychiatry</option><option>Radiology</option>
+        <option>Community Medicine</option><option>Anatomy</option><option>Physiology</option>
+        <option>Biochemistry</option><option value="custom">Custom...</option>
+      </select>
+    </div>
+    <div class="field" id="subj-custom-field" style="display:none"><label class="flabel">Custom Name</label><input class="input" id="subj-custom-name" placeholder="Subject name"></div>
+    <div class="field"><label class="flabel">Target Exam</label><select class="select" id="subj-exam"><option value="neetpg">NEET PG</option><option value="inicet">INICET</option><option value="both">Both</option></select></div>
+    <div class="field"><label class="flabel">Revision Deadline</label><input class="input" type="date" id="subj-date"><div class="fhint">When you want to finish revising this subject. FSRS intervals are capped to fit within this date.</div></div>
+    <div class="modal-footer">
+      <button class="btn btn-g" onclick="closeModal('modal-add-subject')">Cancel</button>
+      <button class="btn btn-p" onclick="addSubject()">Add Subject</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-add-node">
+  <div class="modal">
+    <div class="modal-title" id="node-modal-title">Add Topic</div>
+    <input type="hidden" id="node-parent-id">
+    <input type="hidden" id="node-depth">
+    <div class="field"><label class="flabel" id="node-name-label">Topic Name</label><input class="input" id="node-name" placeholder="e.g. Nephrology, Acute Pancreatitis, Beta Blockers"></div>
+    <div class="field"><label class="flabel">High Yield?</label><select class="select" id="node-hy"><option value="0">No</option><option value="1">Yes — appears frequently in past papers</option></select></div>
+    <div class="modal-footer">
+      <button class="btn btn-g" onclick="closeModal('modal-add-node')">Cancel</button>
+      <button class="btn btn-p" onclick="addNode()">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- GUIDE -->
+<div class="guide-ov" id="guide-ov">
+  <div class="guide-inner">
+    <div class="g-hdr"><div class="g-title">Vignette — Complete Guide</div><button class="g-close" onclick="closeGuide()">Close ×</button></div>
+
+    <div class="g-sec">
+      <div class="g-sec-title">What This App Is</div>
+      <div class="g-text">Vignette is a clinical reasoning trainer for NEET PG and INICET. It is not a question bank. It does not replace PrepLadder, Marrow, or DAMS. It is the layer on top of those tools that converts passive watching and reading into active, durable memory.</div>
+      <div class="g-call"><div class="g-call-title">The problem it solves</div><div class="g-call-text">You can watch a PrepLadder lecture three times and still blank on the question in the exam. This is not laziness or a bad memory. It is the illusion of mastery — recognition feels like knowledge but is not the same thing. Vignette forces retrieval, which is what builds durable memory. The discomfort of trying to recall something you are not sure you know is exactly the mechanism. Do not try to reduce it.</div></div>
+      <div class="g-call"><div class="g-call-title">The two tools you need</div><div class="g-call-text">Use your question bank (PrepLadder, Marrow, DAMS) for video lectures, reading, and full-length grand tests. Use Vignette for daily spaced retrieval and clinical reasoning practice. Both are necessary. Neither replaces the other.</div></div>
+    </div>
+
+    <div class="g-sec">
+      <div class="g-sec-title">The Algorithm — FSRS</div>
+      <div class="g-text">Vignette uses FSRS — Free Spaced Repetition Scheduler — the algorithm that replaced SM-2 as Anki's default in 2023. It is significantly more accurate than the older algorithm.</div>
+      <div class="g-text">Every card has three values: <strong style="color:var(--ink)">Difficulty</strong> (how hard this specific card is for you), <strong style="color:var(--ink)">Stability</strong> (how many days until your recall probability drops to your target), and <strong style="color:var(--ink)">Retrievability</strong> (your predicted probability of recalling it right now). After every review your rating updates these values and the algorithm calculates when to show the card next.</div>
+      <div class="g-text">Cards you keep getting right are shown less frequently — the intervals grow. Cards you keep missing return daily until you get them right. The schedule adapts to your actual memory, not a fixed timetable.</div>
+      <div class="g-call"><div class="g-call-title">Revision deadline cap</div><div class="g-call-text">Every subject has a revision deadline. If the algorithm calculates a next review date after your deadline, it automatically pulls the card forward to fit within the remaining time. No card will be scheduled after your revision deadline.</div></div>
+      <div class="g-call"><div class="g-call-title">High Yield boost — topics and subtopics only</div><div class="g-call-text">Topics and subtopics flagged as High Yield receive a 0.7× interval multiplier — their intervals grow more slowly, keeping them in frequent rotation. NEET PG has well-documented high-yield topics. Flag them when you add them. Subjects themselves are not flagged — only the individual topics and subtopics within them.</div></div>
+    </div>
+
+    <div class="g-sec">
+      <div class="g-sec-title">Subject Tree — Four Levels of Nesting</div>
+      <div class="g-text">Each subject contains topics. Each topic can contain subtopics. Each subtopic can contain further subtopics. Up to four levels deep. Every level can be independently processed and have its own cards.</div>
+      <div class="g-text">Example: Medicine → Nephrology → Glomerulonephritis → FSGS → Management of FSGS. You process and create cards at whatever level makes sense for the material. A broad topic like Nephrology might have overview cards. A specific entity like FSGS will have detailed cards at the deepest level.</div>
+      <div class="g-call"><div class="g-call-title">Recommended setup</div><div class="g-call-text">Add all your subjects on day one with the correct revision deadlines. Flag Medicine, Surgery, OBG, Pathology, Pharmacology, and Microbiology topics as High Yield generously — these subjects together account for the majority of NEET PG questions. Add topics progressively as you cover them in your primary resource, not all at once.</div></div>
+    </div>
+
+    <div class="g-sec">
+      <div class="g-sec-title">Revision Deadline</div>
+      <div class="g-text">Each subject has a revision deadline — the date by which you want to have finished revising that subject. This is a personal milestone, not the exam date. All subjects are tested on the same exam day, but you may want to finish revising Medicine by Month 3 and Surgery by Month 4. Set deadlines accordingly.</div>
+      <div class="g-text">The FSRS cap ensures no card is scheduled after your deadline. If you finish revising a subject ahead of schedule, extend the deadline and the algorithm will spread the remaining reviews appropriately.</div>
+    </div>
+
+    <div class="g-sec">
+      <div class="g-sec-title">Gamification — What the Numbers Mean</div>
+      <div class="g-text"><strong style="color:var(--ink)">Day Streak</strong> — consecutive days on which you completed at least one retrieval session. Resets to 0 if you miss a day. The goal is not the streak. The streak is a byproduct of daily retrieval practice.</div>
+      <div class="g-text"><strong style="color:var(--ink)">Weekly Cleared</strong> — the percentage of cards that were due this week that you actually reviewed. 100% means you cleared your entire due queue every day. Below 70% means overdue cards are accumulating faster than you are clearing them.</div>
+      <div class="g-text"><strong style="color:var(--ink)">Today's due cards cleared</strong> — the progress bar in the Session tab showing how many of today's due cards you have reviewed in the current session. Updates in real time.</div>
+      <div class="g-text"><strong style="color:var(--ink)">Total Cards</strong> — running count of all cards in your bank across all subjects.</div>
+      <div class="g-warn"><div class="g-warn-text">None of these numbers should become the goal. A student who clears cards dishonestly to protect their streak has been failed by the gamification. The numbers reflect genuine practice — they have no value if the underlying practice is dishonest.</div></div>
+    </div>
+
+    <div class="g-sec">
+      <div class="g-sec-title">The Two Card Types</div>
+      <div class="g-text"><strong style="color:var(--ink)">Knowledge cards</strong> — for drug mechanisms, diagnostic criteria, investigation reference ranges, pathological processes, surgical anatomy, classification systems, and isolated facts. Three fields:</div>
+      <div class="g-step"><div class="g-step-num">Q</div><div class="g-step-text"><strong>Question</strong> — Ask "why" not "what." "Why is the anion gap elevated in lactic acidosis" not "What is lactic acidosis." Questions that test understanding produce stronger memory traces than questions that test recognition.</div></div>
+      <div class="g-step"><div class="g-step-num">A</div><div class="g-step-text"><strong>Answer</strong> — Concise. Your own words, not the textbook's. If you cannot say it in your own words you have not understood it yet.</div></div>
+      <div class="g-step"><div class="g-step-num">C</div><div class="g-step-text"><strong>Context — required, not optional.</strong> What existing knowledge does this connect to? This field is what makes the card retrievable six months from now when you have forgotten the context of the original lecture. Never skip it.</div></div>
+      <div class="g-warn"><div class="g-warn-text">Do not copy-paste from notes or textbooks. Cards built from copied text produce recognition, not retrieval. Write the question and answer in your own words after you have understood the concept. If you cannot rephrase it, go back and understand it first.</div></div>
+
+      <div class="g-text" style="margin-top:14px"><strong style="color:var(--ink)">Vignette cards</strong> — for clinical scenarios that mirror NEET PG and INICET question format exactly. Seven fields:</div>
+      <div class="g-step"><div class="g-step-num">1</div><div class="g-step-text"><strong>Patient Profile</strong> — Age, sex, occupation or relevant social history where it matters clinically. "45-year-old male farmer" activates different clinical thinking than "22-year-old female student." Include what is diagnostically relevant.</div></div>
+      <div class="g-step"><div class="g-step-num">2</div><div class="g-step-text"><strong>Presenting Complaint</strong> — What brought the patient in and for how long. Duration is often the diagnostic key — sudden onset versus gradual onset changes the differential entirely.</div></div>
+      <div class="g-step"><div class="g-step-num">3</div><div class="g-step-text"><strong>Key Findings</strong> — Three to four findings, one per line. Choose the discriminating features — findings that point toward the correct diagnosis but also activate the most common wrong answer. If your findings only point toward the right answer without activating a distractor, the card is too easy to be useful exam preparation.</div></div>
+      <div class="g-step"><div class="g-step-num">4</div><div class="g-step-text"><strong>Question Stem</strong> — What you are asking. Most likely diagnosis, investigation of choice, drug of choice, next step in management, mechanism, contraindication, complication. Be specific.</div></div>
+      <div class="g-step"><div class="g-step-num">5</div><div class="g-step-text"><strong>Time Target</strong> — NEET PG averages approximately 60 seconds per question. INICET averages approximately 45 seconds. The countdown is visible during retrieval. Speed of clinical reasoning is being tested, not just accuracy.</div></div>
+      <div class="g-step"><div class="g-step-num">6</div><div class="g-step-text"><strong>Answer</strong> — The correct answer. Specific. Not "workup" but "serum amylase and lipase." Not "surgery" but "emergency appendectomy."</div></div>
+      <div class="g-step"><div class="g-step-num">7</div><div class="g-step-text"><strong>Reasoning — required.</strong> Why this answer and not the most common wrong answer. This is the most important field in the entire app. The exam is designed to catch students who know the right answer but not the reasoning. The distractor logic is always shown after reveal — even when you got the card right. Read it every time.</div></div>
+      <div class="g-call"><div class="g-call-title">Where to get vignettes from</div><div class="g-call-text">Build vignette cards from questions you got wrong in grand tests. From cases you saw during internship. From clinical vignettes in your question bank explanations. The vignettes you build from your own wrong answers are the most valuable because they address your specific failure points, not the generic population's.</div></div>
+    </div>
+
+    <div class="g-sec">
+      <div class="g-sec-title">The Six Tabs — How To Use Each</div>
+
+      <div class="g-text" style="font-size:14px;font-weight:bold;color:var(--ink);margin-bottom:6px">Subjects</div>
+      <div class="g-text">Your clinical map. Add subjects, set revision deadlines, build your topic tree. Topics and subtopics at any depth up to four levels. Flag high-yield nodes individually. The progress bar shows what percentage of nodes in that subject have been processed.</div>
+
+      <div class="g-text" style="font-size:14px;font-weight:bold;color:var(--ink);margin-bottom:6px;margin-top:12px">Session</div>
+      <div class="g-text">Open this every time you sit down to study. Three things to do here:</div>
+      <div class="g-step"><div class="g-step-num">1</div><div class="g-step-text"><strong>Energy check-in first.</strong> High energy means new material — process new nodes and create new cards. Medium energy means revision — work through today's scheduled retrieval. Low energy means easy reviews only — cards already rated Got It that are due for a light pass. Do not force deep processing on low energy. You will encode poorly and waste the session.</div></div>
+      <div class="g-step"><div class="g-step-num">2</div><div class="g-step-text"><strong>Note the session ratio.</strong> The app recommends a Knowledge-to-Vignette ratio based on your nearest revision deadline. Early preparation favours Knowledge cards. Within 60 days the ratio shifts toward Vignette. Within 30 days it shifts heavily toward Vignette. This is a recommendation, not a restriction.</div></div>
+      <div class="g-step"><div class="g-step-num">3</div><div class="g-step-text"><strong>Work through the schedule in order.</strong> Overdue cards appear first. Due cards second. New cards last. The schedule mixes subjects — this is interleaving, one of the most evidence-backed techniques for durable learning. Do not reorder by subject. NEET PG tests all subjects simultaneously. Your preparation should too.</div></div>
+
+      <div class="g-text" style="font-size:14px;font-weight:bold;color:var(--ink);margin-bottom:6px;margin-top:12px">Process</div>
+      <div class="g-text">The gate between studying and creating cards. You cannot create cards for a node without completing the four clinical questions first. This cannot be bypassed. This is the most important feature in the app.</div>
+      <div class="g-text">Before the four questions, you are asked what you already know about the node from your MBBS and internship. Write everything — even half-memories. This activates prior knowledge and creates hooks for the new material.</div>
+      <div class="g-step"><div class="g-step-num">1</div><div class="g-step-text"><strong>Pathophysiology</strong> — What is actually happening in the body? Not the name. The mechanism at the cellular or physiological level. If you cannot explain the mechanism you are memorising a fact, not understanding a concept.</div></div>
+      <div class="g-step"><div class="g-step-num">2</div><div class="g-step-text"><strong>The Differentiator</strong> — What single finding distinguishes this from the most common alternative diagnosis? This forces you to think about the differential simultaneously with the diagnosis. It is what the exam tests with its distractors.</div></div>
+      <div class="g-step"><div class="g-step-num">3</div><div class="g-step-text"><strong>Investigation of Choice</strong> — One investigation and what it shows. The discipline of one answer trains the clinical habit of reaching for the most diagnostic investigation first.</div></div>
+      <div class="g-step"><div class="g-step-num">4</div><div class="g-step-text"><strong>Management Pivot</strong> — Standard management and when it changes. NEET PG and INICET are famous for testing the exception: the patient who would normally receive Treatment A but cannot because of Condition B.</div></div>
+      <div class="g-warn"><div class="g-warn-text">Processing takes time. A node processed properly takes 10-15 minutes. A node processed quickly takes 3 minutes and produces cards that fail at retrieval. The processing time is not wasted — it is the encoding.</div></div>
+
+      <div class="g-text" style="font-size:14px;font-weight:bold;color:var(--ink);margin-bottom:6px;margin-top:12px">Cards</div>
+      <div class="g-text">Create cards only after processing a node. Use Knowledge cards for mechanisms, criteria, ranges, and isolated facts. Use Vignette cards for clinical entities where the exam will test you through a patient scenario.</div>
+      <div class="g-text">A complete node should have both card types. Knowledge cards build the foundational layer. Vignette cards build the clinical reasoning layer on top. A node with only Knowledge cards has gaps in clinical application. A node with only Vignette cards has gaps in foundational knowledge.</div>
+      <div class="g-call"><div class="g-call-title">How many cards per node?</div><div class="g-call-text">There is no target number. Create as many cards as there are distinct ideas worth retaining. Quality matters more than quantity. Ten well-built cards outlast fifty poorly-built ones.</div></div>
+
+      <div class="g-text" style="font-size:14px;font-weight:bold;color:var(--ink);margin-bottom:6px;margin-top:12px">Retrieve</div>
+      <div class="g-text">The core of the app. Open Retrieve every day.</div>
+      <div class="g-text"><strong style="color:var(--ink)">For Knowledge cards:</strong> Read the question. Write everything you recall without looking at anything. Then reveal the answer. Rate yourself honestly using the four-option scale — Blackout, Missed It, Partial, Got It. Any rating below Partial resets the card to day 1.</div>
+      <div class="g-text"><strong style="color:var(--ink)">For Vignette cards:</strong> The scenario appears with a countdown timer. Read the patient, findings, and question stem. Write your answer and reasoning before revealing. Three separate checks after revealing — got the answer, got the reasoning, arrived within time. Getting the answer right for the wrong reason is Partial, not Got It.</div>
+      <div class="g-call"><div class="g-call-title">The distractor logic — always read it</div><div class="g-call-text">After revealing a Vignette card, the distractor logic is always shown — even when you got the card correct. Read it every time. The exam will present you with variations of the same scenario where the distractor is the correct answer. Knowing why the wrong answer is wrong in this case teaches you when it is right in a different case.</div></div>
+      <div class="g-warn"><div class="g-warn-text">Do not skip the retrieval attempt before revealing the answer. The entire mechanism of the app depends on the effort of trying to recall. Students who reveal the answer first and then read and agree with it are doing passive review, not active retrieval. The discomfort of not being sure is not a problem to be solved. It is the learning happening.</div></div>
+
+      <div class="g-text" style="font-size:14px;font-weight:bold;color:var(--ink);margin-bottom:6px;margin-top:12px">Weekly Review</div>
+      <div class="g-text">Do this every Sunday. Two to three hours. Non-negotiable.</div>
+      <div class="g-text">The Review tab shows your session statistics, the Confidence vs Performance Gap analysis, the Grand Test reminder, and four questions.</div>
+      <div class="g-text"><strong style="color:var(--ink)">Confidence vs Performance Gap:</strong> The app calculates your actual FSRS performance per subject and compares it to your self-reported confidence. A large positive gap — high confidence, poor performance — means the illusion of mastery is operating. This is the most dangerous state in exam preparation.</div>
+      <div class="g-call"><div class="g-call-title">The Grand Test reminder</div><div class="g-call-text">Once a week sit a full-length timed mock exam on your question bank platform — 200 questions, timed, exam conditions. The grand test reveals how your knowledge performs under full-exam pressure. After each grand test, create Vignette cards from questions you got wrong or found difficult. This is the most efficient use of grand test feedback.</div></div>
+    </div>
+
+    <div class="g-sec">
+      <div class="g-sec-title">Common Mistakes to Avoid</div>
+      <div class="g-text"><strong style="color:var(--ink)">Creating cards before processing.</strong> The app prevents this technically but the temptation exists to rush through processing to unlock cards quickly. If your processing answers are one line each, you have not processed — you have typed. Proper processing answers are three to five sentences of genuine clinical reasoning.</div>
+      <div class="g-text"><strong style="color:var(--ink)">Skipping the retrieval attempt.</strong> Revealing the answer before writing your response and then reading and agreeing is passive review. The mechanism requires the attempt. Without it you are using a spaced repetition tool as a reading tool.</div>
+      <div class="g-text"><strong style="color:var(--ink)">Being dishonest in self-rating.</strong> Rating Partial as Got It because you got the core right even though you missed the reasoning costs you. When in doubt, rate down. The algorithm can only schedule what you actually know.</div>
+      <div class="g-text"><strong style="color:var(--ink)">Treating Vignette as a replacement for grand tests.</strong> Vignette handles daily retrieval. Grand tests handle full-exam simulation under time pressure. Both are necessary.</div>
+    </div>
+
+    <div class="g-sec">
+      <div class="g-sec-title">A Note on Discomfort</div>
+      <div class="g-text">This app is designed to be uncomfortable. Trying to recall something you are not sure you know feels worse than watching a lecture or reading a summary. It should. That discomfort is the desirable difficulty that produces durable memory.</div>
+      <div class="g-text">Students who use retrieval practice consistently underestimate how much they have learned because the knowledge is genuinely encoded rather than just recognised. Students who reread consistently overestimate how much they have learned because familiarity feels like knowledge.</div>
+      <div class="g-text">If every session feels smooth and comfortable, the app is not working. If sessions frequently produce the experience of trying to recall something and failing — and then seeing the answer and recognising it — the app is working exactly as it should.</div>
+    </div>
+
+    <div style="text-align:center;padding:20px 0;border-top:1px solid var(--border);margin-top:10px">
+      <div style="font-size:13px;color:var(--ink3)">Vignette · Part of The System ecosystem</div>
+      <div style="font-size:12px;color:var(--ink3);margin-top:4px">The System · Study · Vignette</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const g=k=>{try{return JSON.parse(localStorage.getItem('vig-'+k));}catch{return null;}};
+const sv=(k,v)=>localStorage.setItem('vig-'+k,JSON.stringify(v));
+
+// THEME
+const themes=['','paper','dim'];let themeIdx=0;
+function cycleTheme(){themeIdx=(themeIdx+1)%themes.length;document.body.className=themes[themeIdx];sv('theme',themeIdx);}
+(()=>{themeIdx=g('theme')||0;document.body.className=themes[themeIdx];})();
+
+// GUIDE
+function openGuide(){document.getElementById('guide-ov').classList.add('open');document.getElementById('guide-ov').scrollTop=0;}
+function closeGuide(){document.getElementById('guide-ov').classList.remove('open');}
+
+// TABS
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.getElementById('nav-'+name).classList.add('active');
+  if(name==='subjects')renderSubjects();
+  if(name==='session')renderSession();
+  if(name==='process')renderNodeSelects();
+  if(name==='cards')renderNodeSelects2();
+  if(name==='retrieve')renderRetrieve();
+  if(name==='review')renderReview();
+}
+
+document.getElementById('subj-name').addEventListener('change',function(){
+  document.getElementById('subj-custom-field').style.display=this.value==='custom'?'block':'none';
+});
+
+// ONBOARD
+function dismissOnboard(){sv('onboard',true);document.getElementById('subjects-onboard').style.display='none';}
+(()=>{if(g('onboard'))document.getElementById('subjects-onboard').style.display='none';})();
+
+// DATA
+const getSubjs=()=>g('subjects')||[];
+const saveSubjs=a=>sv('subjects',a);
+const getCards=()=>g('cards')||[];
+const saveCards=a=>sv('cards',a);
+const getProc=()=>g('proc')||{};
+const saveProc_=o=>sv('proc',o);
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+
+// TREE HELPERS
+function getAllNodes(){
+  const nodes=[];
+  function walk(arr,sid,sname,depth,pp){
+    for(const n of arr){
+      const path=pp?pp+' › '+n.name:n.name;
+      nodes.push({...n,sid,sname,depth,path,dp:sname+' › '+path});
+      if(n.children&&n.children.length)walk(n.children,sid,sname,depth+1,path);
+    }
+  }
+  for(const s of getSubjs())walk(s.topics||[],s.id,s.name,0,'');
+  return nodes;
+}
+
+function findNode(subjs,nid){
+  function walk(arr){for(const n of arr){if(n.id===nid)return n;if(n.children){const f=walk(n.children);if(f)return f;}}return null;}
+  for(const s of subjs){const f=walk(s.topics||[]);if(f)return f;}
+  return null;
+}
+
+function findSubjForNode(subjs,nid){
+  function walk(arr){for(const n of arr){if(n.id===nid)return true;if(n.children&&walk(n.children))return true;}return false;}
+  for(const s of subjs){if(walk(s.topics||[]))return s;}
+  return null;
+}
+
+function delNodeFromTree(arr,nid){
+  const i=arr.findIndex(n=>n.id===nid);
+  if(i>=0){arr.splice(i,1);return true;}
+  for(const n of arr){if(n.children&&delNodeFromTree(n.children,nid))return true;}
+  return false;
+}
+
+function getAllNodeIds(node){
+  const ids=[node.id];
+  if(node.children)for(const c of node.children)ids.push(...getAllNodeIds(c));
+  return ids;
+}
+
+function isProc(nid){const p=getProc();return p[nid]&&p[nid].complete;}
+
+// FSRS
+function fsrs(card,rating){
+  let{ef,interval,reps,nodeId}=card;
+  if(rating<3){reps=0;interval=1;}
+  else{if(reps===0)interval=1;else if(reps===1)interval=6;else interval=Math.round(interval*ef);reps++;}
+  ef=ef+(0.1-(5-rating)*(0.08+(5-rating)*0.02));
+  if(ef<1.3)ef=1.3;
+  const subjs=getSubjs();
+  const node=findNode(subjs,nodeId);
+  if(node&&node.highYield)interval=Math.max(1,Math.floor(interval*0.7));
+  const subj=findSubjForNode(subjs,nodeId);
+  if(subj&&subj.revisionDeadline){
+    const today=new Date();today.setHours(0,0,0,0);
+    const dl=new Date(subj.revisionDeadline);
+    const days=Math.ceil((dl-today)/86400000);
+    if(days>0&&interval>days)interval=Math.max(1,days);
+  }
+  const next=new Date();next.setDate(next.getDate()+interval);
+  return{...card,ef,interval,reps,nextReview:next.toISOString().split('T')[0]};
+}
+
+function dueIn(card){const n=new Date(card.nextReview);const t=new Date();t.setHours(0,0,0,0);return Math.floor((n-t)/86400000);}
+
+function mkKCard(nid,q,a,ctx){return{id:uid(),type:'k',nodeId:nid,question:q,answer:a,context:ctx,ef:2.5,interval:0,reps:0,nextReview:new Date().toISOString().split('T')[0],created:Date.now()};}
+function mkVCard(nid,pat,comp,finds,qstem,tt,ans,reas,kf,distr){return{id:uid(),type:'v',nodeId:nid,patient:pat,complaint:comp,findings:finds,qstem,timeTarget:parseInt(tt)||60,answer:ans,reasoning:reas,keyfact:kf,distractor:distr||'',ef:2.5,interval:0,reps:0,nextReview:new Date().toISOString().split('T')[0],created:Date.now()};}
+
+// SUBJECTS
+function addSubject(){
+  const sel=document.getElementById('subj-name');
+  let name=sel.value;
+  if(name==='custom')name=document.getElementById('subj-custom-name').value.trim();
+  const date=document.getElementById('subj-date').value;
+  const exam=document.getElementById('subj-exam').value;
+  if(!name||!date){alert('Subject name and revision deadline are required.');return;}
+  const subjs=getSubjs();
+  subjs.push({id:uid(),name,revisionDeadline:date,exam,topics:[]});
+  saveSubjs(subjs);closeModal('modal-add-subject');
+  sel.value='';document.getElementById('subj-date').value='';
+  document.getElementById('subj-custom-field').style.display='none';
+  renderSubjects();
+}
+
+function deleteSubject(sid){
+  if(!confirm('Delete this subject and all its topics and cards?'))return;
+  let subjs=getSubjs();
+  const subj=subjs.find(s=>s.id===sid);
+  if(subj){
+    const all=[];
+    function col(arr){for(const n of arr){all.push(n.id);if(n.children)col(n.children);}}
+    col(subj.topics||[]);
+    saveCards(getCards().filter(c=>!all.includes(c.nodeId)));
+    const p=getProc();all.forEach(id=>delete p[id]);saveProc_(p);
+  }
+  saveSubjs(subjs.filter(s=>s.id!==sid));renderSubjects();
+}
+
+// NODES
+let pendingPid=null,pendingDepth=0;
+function openAddNode(pid,depth){
+  pendingPid=pid;pendingDepth=depth;
+  const lbls=['Topic','Subtopic','Sub-subtopic','Sub-sub-subtopic'];
+  const l=lbls[Math.min(depth,3)];
+  document.getElementById('node-modal-title').textContent='Add '+l;
+  document.getElementById('node-name-label').textContent=l+' Name';
+  document.getElementById('node-name').value='';
+  document.getElementById('node-hy').value='0';
+  openModal('modal-add-node');
+}
+
+function addNode(){
+  const name=document.getElementById('node-name').value.trim();
+  const hy=parseInt(document.getElementById('node-hy').value);
+  if(!name)return;
+  const nn={id:uid(),name,highYield:hy,children:[],expanded:true};
+  const subjs=getSubjs();
+  if(pendingDepth===0){const s=subjs.find(s=>s.id===pendingPid);if(s){if(!s.topics)s.topics=[];s.topics.push(nn);}}
+  else{const p=findNode(subjs,pendingPid);if(p){if(!p.children)p.children=[];p.children.push(nn);}}
+  saveSubjs(subjs);closeModal('modal-add-node');renderSubjects();
+}
+
+function deleteNode(nid){
+  if(!confirm('Delete this node and all its children and cards?'))return;
+  const subjs=getSubjs();
+  const node=findNode(subjs,nid);
+  if(node){
+    const all=getAllNodeIds(node);
+    saveCards(getCards().filter(c=>!all.includes(c.nodeId)));
+    const p=getProc();all.forEach(id=>delete p[id]);saveProc_(p);
+    for(const s of subjs)delNodeFromTree(s.topics||[],nid);
+  }
+  saveSubjs(subjs);renderSubjects();
+}
+
+function toggleNode(nid){
+  const subjs=getSubjs();const node=findNode(subjs,nid);
+  if(node)node.expanded=!node.expanded;
+  saveSubjs(subjs);renderSubjects();
+}
+
+// STATUS BADGE
+function statusBadge(nid){
+  const cards=getCards().filter(c=>c.nodeId===nid);
+  if(!cards.length)return'<span class="badge b-new">Not started</span>';
+  if(cards.some(c=>dueIn(c)<0))return'<span class="badge b-rev">Needs review</span>';
+  if(cards.every(c=>c.interval>14))return'<span class="badge b-conf">Confident</span>';
+  return'<span class="badge b-prog">In progress</span>';
+}
+
+// RENDER SUBJECTS
+function renderSubjects(){
+  const subjs=getSubjs();
+  const list=document.getElementById('subjects-list');
+  const cd=document.getElementById('exam-countdowns');
+  const today=new Date();today.setHours(0,0,0,0);
+
+  if(subjs.length){
+    cd.innerHTML='<div class="slabel">Revision Deadlines</div>'+subjs.map(s=>{
+      const days=Math.ceil((new Date(s.revisionDeadline)-today)/86400000);
+      const cls=days<=14?'cd-urg':days<=60?'cd-soon':'cd-ok';
+      const el=s.exam==='neetpg'?'NEET PG':s.exam==='inicet'?'INICET':'Both';
+      return`<div class="cd-bar"><div class="cd-subj">${s.name} <span style="font-size:11px;color:var(--ink3)">${el}</span></div><div class="cd-days ${cls}">${days>0?days+' days':'TODAY'}</div></div>`;
+    }).join('');
+  } else cd.innerHTML='';
+
+  if(!subjs.length){list.innerHTML='<div class="empty"><div class="empty-icon">◇</div>No subjects yet. Add one to begin.</div>';return;}
+
+  function renderNode(node,depth){
+    const cards=getCards().filter(c=>c.nodeId===node.id);
+    const kc=cards.filter(c=>c.type==='k').length;
+    const vc=cards.filter(c=>c.type==='v').length;
+    const proc=isProc(node.id);
+    const hasKids=node.children&&node.children.length>0;
+    const exp=node.expanded!==false;
+    const canAdd=depth<3;
+    const depLbls=['subtopic','sub-subtopic','sub-sub-subtopic'];
+    let html=`<div class="node-item">
+      <div class="node-hdr">
+        ${hasKids?`<button class="node-tog ${exp?'open':''}" onclick="toggleNode('${node.id}')">▶</button>`:'<span style="width:30px;flex-shrink:0"></span>'}
+        <div class="node-info">
+          <div class="node-name">${node.name}${node.highYield?'<span class="hy-badge">HY</span>':''}</div>
+          <div class="node-meta">${proc?'✓ Processed':'○ Not processed'} · ${kc}K ${vc}V</div>
+        </div>
+        <div class="node-acts">${statusBadge(node.id)}<button class="del-btn" onclick="deleteNode('${node.id}')">×</button></div>
+      </div>
+    </div>`;
+    if(exp){
+      const kidsHtml=hasKids?node.children.map(c=>renderNode(c,depth+1)).join(''):'';
+      const addBtn=canAdd?`<button class="add-child-btn" onclick="openAddNode('${node.id}',${depth+1})">+ Add ${depLbls[depth]||'child'}</button>`:'';
+      if(kidsHtml||addBtn)html+=`<div class="node-children">${kidsHtml}${addBtn}</div>`;
+    }
+    return html;
+  }
+
+  list.innerHTML=subjs.map(s=>{
+    const all=getAllNodes().filter(n=>n.sid===s.id);
+    const procCt=all.filter(n=>isProc(n.id)).length;
+    const kCards=getCards().filter(c=>all.some(n=>n.id===c.nodeId)&&c.type==='k').length;
+    const vCards=getCards().filter(c=>all.some(n=>n.id===c.nodeId)&&c.type==='v').length;
+    const topicsHtml=(s.topics||[]).map(t=>renderNode(t,0)).join('');
+    return`<div class="subj-card">
+      <div class="subj-hdr">
+        <div style="flex:1"><div class="subj-name">${s.name}</div><div class="subj-meta">${all.length} nodes · ${kCards}K ${vCards}V · ${procCt}/${all.length} processed</div></div>
+        <button class="del-btn" onclick="deleteSubject('${s.id}')">×</button>
+      </div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${all.length?Math.round(procCt/all.length*100):0}%"></div></div>
+      ${topicsHtml}
+      <button class="add-child-btn" onclick="openAddNode('${s.id}',0)" style="margin-top:8px">+ Add Topic</button>
+    </div>`;
+  }).join('');
+}
+
+// NODE SELECTS
+function buildNodeOpts(){
+  return['<option value="">— Choose a topic or subtopic —</option>',...getAllNodes().map(n=>`<option value="${n.id}">${n.dp}${n.highYield?' ★':''}</option>`)].join('');
+}
+function renderNodeSelects(){
+  document.getElementById('proc-node').innerHTML=buildNodeOpts();
+  document.getElementById('proc-prior').style.display='none';
+  document.getElementById('proc-steps').style.display='none';
+}
+function renderNodeSelects2(){
+  document.getElementById('cards-node').innerHTML=buildNodeOpts();
+  document.getElementById('cards-gate').style.display='none';
+  document.getElementById('cards-create').style.display='none';
+  document.getElementById('cards-list').innerHTML='';
+}
+
+// PROCESS
+function loadProcState(){
+  const nid=document.getElementById('proc-node').value;
+  if(!nid){document.getElementById('proc-prior').style.display='none';document.getElementById('proc-steps').style.display='none';return;}
+  document.getElementById('proc-prior').style.display='block';
+  document.getElementById('proc-steps').style.display='block';
+  const p=getProc();const st=p[nid]||{};
+  document.getElementById('prior-k').value=st.prior||'';
+  document.getElementById('ps1-txt').value=st.ps1||'';
+  document.getElementById('ps2-txt').value=st.ps2||'';
+  document.getElementById('ps3-txt').value=st.ps3||'';
+  document.getElementById('ps4-txt').value=st.ps4||'';
+  ['ps1','ps2','ps3','ps4'].forEach(p=>{const b=document.getElementById(p);st[p]?b.classList.add('ps-done'):b.classList.remove('ps-done');});
+}
+
+function saveProc(){
+  const nid=document.getElementById('proc-node').value;
+  if(!nid)return;
+  const p1=document.getElementById('ps1-txt').value.trim();
+  const p2=document.getElementById('ps2-txt').value.trim();
+  const p3=document.getElementById('ps3-txt').value.trim();
+  const p4=document.getElementById('ps4-txt').value.trim();
+  if(!p1||!p2||!p3||!p4){alert('Complete all four clinical questions before unlocking cards.');return;}
+  const p=getProc();
+  p[nid]={prior:document.getElementById('prior-k').value,ps1:p1,ps2:p2,ps3:p3,ps4:p4,complete:true,completedAt:Date.now()};
+  saveProc_(p);
+  ['ps1','ps2','ps3','ps4'].forEach(id=>document.getElementById(id).classList.add('ps-done'));
+  alert('Processing complete. Cards unlocked for this node.');
+  renderSubjects();
+}
+
+// CARDS
+let ctype='k';
+function setCardType(t){
+  ctype=t;
+  document.getElementById('form-k').style.display=t==='k'?'block':'none';
+  document.getElementById('form-v').style.display=t==='v'?'block':'none';
+  document.getElementById('ct-k').className='btn btn-'+(t==='k'?'p':'s');
+  document.getElementById('ct-v').className='btn btn-'+(t==='v'?'p':'s');
+}
+
+function loadCardsNode(){
+  const nid=document.getElementById('cards-node').value;
+  const gate=document.getElementById('cards-gate');
+  const create=document.getElementById('cards-create');
+  if(!nid){gate.style.display='none';create.style.display='none';renderProcRef('');return;}
+  if(!isProc(nid)){gate.style.display='block';create.style.display='none';renderProcRef('');}
+  else{gate.style.display='none';create.style.display='block';setCardType('k');renderProcRef(nid);}
+  renderCardsList(nid);
+}
+function renderProcRef(nid){
+  const el=document.getElementById('proc-ref-panel');if(!el)return;
+  if(!nid){el.style.display='none';return;}
+  const p=getProc();const st=p[nid];
+  if(!st||!st.complete){el.style.display='none';return;}
+  el.style.display='block';
+  document.getElementById('proc-ref-body').innerHTML=`
+    <div style="margin-bottom:8px"><div style="font-size:9px;color:var(--teal);letter-spacing:1px;text-transform:uppercase;font-family:var(--mono);margin-bottom:3px">Pathophysiology</div><div style="font-size:12px;color:var(--ink2);line-height:1.55">${st.ps1||'—'}</div></div>
+    <div style="margin-bottom:8px"><div style="font-size:9px;color:var(--teal);letter-spacing:1px;text-transform:uppercase;font-family:var(--mono);margin-bottom:3px">Differentiator</div><div style="font-size:12px;color:var(--ink2);line-height:1.55">${st.ps2||'—'}</div></div>
+    <div style="margin-bottom:8px"><div style="font-size:9px;color:var(--teal);letter-spacing:1px;text-transform:uppercase;font-family:var(--mono);margin-bottom:3px">Investigation of Choice</div><div style="font-size:12px;color:var(--ink2);line-height:1.55">${st.ps3||'—'}</div></div>
+    <div><div style="font-size:9px;color:var(--teal);letter-spacing:1px;text-transform:uppercase;font-family:var(--mono);margin-bottom:3px">Management Pivot</div><div style="font-size:12px;color:var(--ink2);line-height:1.55">${st.ps4||'—'}</div></div>
+  `;
+}
+
+function addKCard(){
+  const nid=document.getElementById('cards-node').value;
+  if(!nid||!isProc(nid))return;
+  const q=document.getElementById('k-q').value.trim();
+  const a=document.getElementById('k-a').value.trim();
+  const ctx=document.getElementById('k-ctx').value.trim();
+  if(!q||!a||!ctx){alert('All three fields are required. Context is not optional.');return;}
+  const cards=getCards();cards.push(mkKCard(nid,q,a,ctx));saveCards(cards);
+  document.getElementById('k-q').value='';document.getElementById('k-a').value='';document.getElementById('k-ctx').value='';
+  renderCardsList(nid);
+}
+
+function addVCard(){
+  const nid=document.getElementById('cards-node').value;
+  if(!nid||!isProc(nid))return;
+  const pat=document.getElementById('v-pat').value.trim();
+  const comp=document.getElementById('v-comp').value.trim();
+  const finds=document.getElementById('v-finds').value.trim();
+  const qstem=document.getElementById('v-qstem').value.trim();
+  const tt=document.getElementById('v-time').value;
+  const ans=document.getElementById('v-ans').value.trim();
+  const reas=document.getElementById('v-reas').value.trim();
+  const kf=document.getElementById('v-kf').value.trim();
+  const distr=document.getElementById('v-distr').value.trim();
+  if(!pat||!comp||!finds||!qstem||!ans||!reas||!distr){alert('All fields except Key Fact are required. Distractor Logic is critical.');return;}
+  const cards=getCards();cards.push(mkVCard(nid,pat,comp,finds,qstem,tt,ans,reas,kf,distr));saveCards(cards);
+  ['v-pat','v-comp','v-finds','v-qstem','v-ans','v-reas','v-kf','v-distr'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('v-time').value='60';
+  renderCardsList(nid);
+}
+
+function delCard(cid){
+  if(!confirm('Delete this card?'))return;
+  saveCards(getCards().filter(c=>c.id!==cid));
+  const nid=document.getElementById('cards-node').value;
+  if(nid)renderCardsList(nid);
+}
+
+function renderCardsList(nid){
+  const cards=getCards().filter(c=>c.nodeId===nid);
+  const list=document.getElementById('cards-list');
+  if(!cards.length){list.innerHTML='<div style="font-size:13px;color:var(--ink3);text-align:center;padding:20px">No cards yet for this node.</div>';return;}
+  list.innerHTML=`<div style="font-size:12px;color:var(--ink3);margin-bottom:8px">${cards.filter(c=>c.type==='k').length} Knowledge · ${cards.filter(c=>c.type==='v').length} Vignette</div>`+
+    cards.map(c=>`<div class="card" style="margin-bottom:8px;border-left:3px solid ${c.type==='v'?'#3a6a8a':'var(--teal-dim)'}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:9px;padding:2px 7px;border-radius:8px;display:inline-block;margin-bottom:5px;${c.type==='v'?'background:#081820;color:#4a8aaa;border:1px solid #1a3a5a':'background:var(--bg4);color:var(--ink3)'}">${c.type==='v'?'VIGNETTE':'KNOWLEDGE'}</div>
+          <div style="font-size:13px;color:var(--ink);font-style:italic;margin-bottom:3px">${c.type==='v'?c.patient+' — '+c.qstem:c.question}</div>
+          <div style="font-size:12px;color:var(--ink2)">${c.answer}</div>
+          <div style="font-size:11px;color:var(--ink3);margin-top:3px">EF: ${c.ef.toFixed(2)} · ${c.interval}d · ${c.nextReview}</div>
+        </div>
+        <button class="del-btn" onclick="delCard('${c.id}')">×</button>
+      </div>
+    </div>`).join('');
+}
+
+// ENERGY
+let curEnergy=g('energy')||'';
+function setEnergy(lv){
+  curEnergy=lv;sv('energy',lv);
+  ['high','med','low'].forEach(l=>{const b=document.getElementById('e-'+l);b.className='energy-btn'+(l===lv?' e-'+lv:'');});
+  const r=document.getElementById('energy-rec');r.style.display='block';
+  r.textContent={high:'⬆ High energy — process new nodes, create new cards, tackle new material.',med:'→ Medium energy — work through today\'s due retrievals.',low:'⬇ Low energy — easy reviews only, or rest and return later.'}[lv];
+  updateRatioBar();
+}
+
+function updateRatioBar(){
+  const subjs=getSubjs();
+  if(!subjs.length){document.getElementById('ratio-bar-wrap').style.display='none';return;}
+  const today=new Date();today.setHours(0,0,0,0);
+  const minDays=subjs.reduce((m,s)=>{const d=Math.ceil((new Date(s.revisionDeadline)-today)/86400000);return Math.min(m,d);},9999);
+  let kp,vp,reason;
+  if(minDays>90){kp=70;vp=30;reason='Early preparation — build foundational knowledge first.';}
+  else if(minDays>60){kp=60;vp=40;reason='Mid-preparation — begin shifting toward clinical reasoning.';}
+  else if(minDays>30){kp=40;vp=60;reason='Approaching deadline — vignette practice should dominate.';}
+  else{kp=25;vp=75;reason='Final phase — heavy vignette focus.';}
+  document.getElementById('ratio-bar-wrap').style.display='block';
+  document.getElementById('rk').style.width=kp+'%';
+  document.getElementById('rv').style.width=vp+'%';
+  document.getElementById('rk-lbl').textContent='Knowledge '+kp+'%';
+  document.getElementById('rv-lbl').textContent='Vignette '+vp+'%';
+  document.getElementById('ratio-reason').textContent=reason;
+}
+
+// TIMER
+let timerInt=null,timerSecs=0,timerOn=false;
+function toggleTimer(){
+  if(timerOn){clearInterval(timerInt);timerOn=false;document.getElementById('timer-btn').textContent='Resume Session';}
+  else{timerInt=setInterval(()=>{timerSecs++;updateTimerDisplay();},1000);timerOn=true;document.getElementById('timer-btn').textContent='Pause Session';}
+}
+function resetTimer(){clearInterval(timerInt);timerOn=false;timerSecs=0;updateTimerDisplay();document.getElementById('timer-btn').textContent='Start Session';}
+function updateTimerDisplay(){const h=Math.floor(timerSecs/3600),m=Math.floor((timerSecs%3600)/60),s=timerSecs%60;document.getElementById('session-timer').textContent=[h,m,s].map(n=>n.toString().padStart(2,'0')).join(':');}
+
+// GAMIFICATION
+function updateStreak(){
+  const today=new Date().toISOString().split('T')[0];
+  const sd=g('streak')||{lastDate:'',count:0};
+  const yd=new Date();yd.setDate(yd.getDate()-1);
+  const yStr=yd.toISOString().split('T')[0];
+  if(sd.lastDate!==today){
+    if(sd.lastDate===yStr)sd.count++;
+    else sd.count=1;
+    sd.lastDate=today;
+    sv('streak',sd);
+  }
+  return sd.count;
+}
+
+function renderGameStats(){
+  const sd=g('streak')||{count:0};
+  document.getElementById('streak-count').textContent=sd.count;
+  document.getElementById('total-cards').textContent=getCards().length;
+
+  // Weekly cleared: count cards rated this week vs cards that were due this week
+  // Track per-card-per-week reviews using a Set stored in ws.reviewedIds
+  const ws=g('ws')||{due:0,cleared:0,reviewedIds:[]};
+  // Recalculate from actual card data for accuracy
+  const wkStart=getWeekStart();
+  const allCards=getCards();
+  // Cards reviewed this week = cards whose last review date is this week
+  const reviewedThisWeek=allCards.filter(c=>{
+    if(!c.lastReviewed)return false;
+    return new Date(c.lastReviewed)>=new Date(wkStart);
+  }).length;
+  // Cards that were due this week = reviewed + still overdue
+  const today=new Date();today.setHours(0,0,0,0);
+  const overdueCount=allCards.filter(c=>new Date(c.nextReview)<today).length;
+  const totalDueThisWeek=reviewedThisWeek+overdueCount;
+  const weekPct=totalDueThisWeek>0?Math.round(reviewedThisWeek/totalDueThisWeek*100):0;
+  document.getElementById('weekly-pct').textContent=weekPct+'%';
+
+  // Today's clearance bar
+  const todayCleared=g('today-cleared')||0;
+  const dueToday=getDueCards('').length;
+  const total=dueToday+todayCleared;
+  if(total>0){
+    document.getElementById('clr-bar').style.display='block';
+    document.getElementById('clr-fill').style.width=(Math.round(todayCleared/total*100))+'%';
+    document.getElementById('clr-done').textContent=todayCleared+' done';
+    document.getElementById('clr-total').textContent=total+' due today';
+  }
+}
+function getWeekStart(){
+  const d=new Date();d.setHours(0,0,0,0);
+  d.setDate(d.getDate()-d.getDay());
+  return d.toISOString().split('T')[0];
+}
+
+// SESSION
+function getDueCards(energy){
+  const cards=getCards();
+  const today=new Date();today.setHours(0,0,0,0);
+  let due=[];
+  for(const card of cards){
+    const d=dueIn(card);const isNew=card.reps===0;
+    if(d<0)due.push({...card,priority:0,tag:'overdue'});
+    else if(d===0&&!isNew)due.push({...card,priority:1,tag:'due'});
+    else if(isNew&&(energy==='high'||!energy))due.push({...card,priority:2,tag:'new'});
+  }
+  if(energy==='low')due=due.filter(c=>c.priority<2&&c.ef>2.2&&c.interval>7);
+  if(energy==='med')due=due.filter(c=>c.priority<2);
+  due.sort((a,b)=>a.priority-b.priority);
+  const byS={};
+  for(const c of due){const s=findSubjForNode(getSubjs(),c.nodeId);const sid=s?s.id:'x';if(!byS[sid])byS[sid]=[];byS[sid].push(c);}
+  const sids=Object.keys(byS);const il=[];let i=0;
+  while(il.length<due.length){const sid=sids[i%sids.length];if(byS[sid]&&byS[sid].length)il.push(byS[sid].shift());i++;if(i>due.length*3)break;}
+  return il;
+}
+
+function nodePath(nid){const n=getAllNodes().find(x=>x.id===nid);return n?n.dp:'Unknown';}
+
+function renderSession(){
+  if(curEnergy)setEnergy(curEnergy);else updateRatioBar();
+  renderGameStats();
+  const pinned=g('pinned-topic');
+  const due=getDueCards(curEnergy);
+  const sched=document.getElementById('session-sched');
+  const ws=g('ws')||{due:0,cleared:0};
+  if(due.length){ws.due=Math.max(ws.due,due.length+(g('today-cleared')||0));sv('ws',ws);}
+  if(!due.length){sched.innerHTML='<div class="empty"><div class="empty-icon">◇</div>No cards due right now.</div>';return;}
+  const tmap={overdue:'<span class="t-over">OVERDUE</span>',due:'<span class="t-due">DUE</span>',new:'<span class="t-new">NEW</span>'};
+  const tymap={k:'<span class="t-k">K</span>',v:'<span class="t-v">V</span>'};
+  let html='';
+  if(pinned)html+=`<div style="font-size:12px;color:var(--teal);margin-bottom:8px">★ Pinned: ${pinned}</div>`;
+  html+=due.slice(0,25).map(c=>`<div class="sched-item" onclick="startRetCard('${c.id}')">
+    <div class="sched-l"><div class="sched-name">${nodePath(c.nodeId)}</div><div class="sched-meta">Interval: ${c.interval}d · EF: ${c.ef.toFixed(2)}</div></div>
+    <div style="display:flex;gap:5px;align-items:center">${tymap[c.type]||''}${tmap[c.tag]||''}</div>
+  </div>`).join('');
+  if(due.length>25)html+=`<div style="font-size:12px;color:var(--ink3);text-align:center;margin-top:8px">+${due.length-25} more</div>`;
+  sched.innerHTML=html;
+}
+
+// RETRIEVE
+let retQ=[],retIdx=0;
+let retResults={gi:0,pa:0,mi:0,bl:0};
+let vChecks={a:null,r:null,t:null};
+let cdInt=null;
+
+function renderRetrieve(){
+  const due=getDueCards(curEnergy||'');
+  if(!due.length&&!retQ.length){
+    // Distinguish between no cards created yet vs all done
+    const allCards=getCards();
+    const msg=allCards.length===0
+      ?'No cards yet. Process a node in the Process tab, then create cards in the Cards tab.'
+      :'All caught up. Nothing due right now.';
+    document.getElementById('ret-empty').querySelector('div:last-child').innerHTML=msg;
+    document.getElementById('ret-empty').style.display='block';
+    document.getElementById('ret-session').style.display='none';
+    return;
+  }
+  if(retQ.length){
+    // Session already in progress — show current card without reinitialising
+    document.getElementById('ret-empty').style.display='none';
+    document.getElementById('ret-session').style.display='block';
+    document.getElementById('ret-done').style.display='none';
+    document.getElementById('ret-card-view').style.display='block';
+    showCard();
+    return;
+  }
+  document.getElementById('ret-empty').style.display='none';
+  document.getElementById('ret-session').style.display='block';
+  initRet(due);
+}
+
+function startRetCard(cid){
+  const due=getDueCards(curEnergy||'');
+  const idx=due.findIndex(c=>c.id===cid);
+  initRet(due,idx>=0?idx:0);switchTab('retrieve');
+}
+
+function initRet(due,start=0){
+  retQ=due;retIdx=start;retResults={gi:0,pa:0,mi:0,bl:0};
+  document.getElementById('ret-done').style.display='none';
+  document.getElementById('ret-card-view').style.display='block';
+  showCard();updateStreak();
+}
+
+function showCard(){
+  if(retIdx>=retQ.length){showRetDone();return;}
+  const c=retQ[retIdx];
+  document.getElementById('ret-prog').textContent=`${retIdx+1} / ${retQ.length}`;
+  if(c.type==='k')showKCard(c);else showVCard(c);
+}
+
+function showKCard(c){
+  document.getElementById('rv-k').style.display='block';document.getElementById('rv-v').style.display='none';
+  document.getElementById('rv-k-topic').textContent=nodePath(c.nodeId);
+  document.getElementById('rv-k-q').textContent=c.question;
+  document.getElementById('rv-k-resp').value='';
+  document.getElementById('rv-k-ans').classList.remove('shown');
+  document.getElementById('rv-k-rate').style.display='none';
+}
+
+function showVCard(c){
+  document.getElementById('rv-k').style.display='none';document.getElementById('rv-v').style.display='block';
+  document.getElementById('rv-v-topic').textContent=nodePath(c.nodeId);
+  document.getElementById('rv-v-pat').textContent=c.patient;
+  document.getElementById('rv-v-comp').textContent=c.complaint;
+  const finds=c.findings.split('\n').filter(f=>f.trim());
+  document.getElementById('rv-v-finds').innerHTML=finds.map(f=>`<div class="find-item"><span class="find-dot">▸</span><span>${f}</span></div>`).join('');
+  document.getElementById('rv-v-qstem').textContent=c.qstem;
+  document.getElementById('rv-v-resp').value='';
+  document.getElementById('rv-v-ans').classList.remove('shown');
+  document.getElementById('rv-v-rate').style.display='none';
+  vChecks={a:null,r:null,t:null};
+  ['ca','cr','ct'].forEach(p=>{document.getElementById(p+'-y').classList.remove('active');document.getElementById(p+'-n').classList.remove('active');});
+  if(cdInt)clearInterval(cdInt);
+  let rem=c.timeTarget||60;
+  updateCD(rem,c.timeTarget);
+  cdInt=setInterval(()=>{rem--;updateCD(rem,c.timeTarget);if(rem<=0){clearInterval(cdInt);vChecks.t=false;document.getElementById('ct-n').classList.add('active');}},1000);
+}
+
+function updateCD(rem,target){
+  const el=document.getElementById('rv-v-cd');el.textContent=rem;
+  const p=rem/target;el.className='cd-num'+(p>0.5?' cd-ok2':p>0.25?' cd-warn':' cd-danger');
+}
+
+function showKAns(){
+  const c=retQ[retIdx];
+  document.getElementById('rv-k-ans-txt').textContent=c.answer;
+  document.getElementById('rv-k-ctx-txt').textContent=c.context;
+  document.getElementById('rv-k-ans').classList.add('shown');
+  document.getElementById('rv-k-rate').style.display='block';
+}
+
+function showVAns(){
+  if(cdInt)clearInterval(cdInt);
+  const c=retQ[retIdx];
+  document.getElementById('rv-v-ans-txt').textContent=c.answer;
+  document.getElementById('rv-v-reas-txt').textContent=c.reasoning;
+  document.getElementById('rv-v-kf-txt').textContent=c.keyfact||'';
+  document.getElementById('rv-v-distr').textContent=c.distractor||c.reasoning;
+  document.getElementById('rv-v-ans').classList.add('shown');
+  document.getElementById('rv-v-rate').style.display='block';
+}
+
+function rateK(r){applyRating(r);}
+
+function setCheck(type,val){
+  vChecks[type]=val;
+  const p=type==='a'?'ca':type==='r'?'cr':'ct';
+  document.getElementById(p+'-y').classList.toggle('active',val===true);
+  document.getElementById(p+'-n').classList.toggle('active',val===false);
+}
+
+function submitVRate(){
+  const{a,r,t}=vChecks;
+  if(a===null||r===null||t===null){alert('Please answer all three checks.');return;}
+  let rating=a&&r&&t?5:a&&r?4:a||r?3:2;
+  if(!a&&!r)rating=0;
+  applyRating(rating);
+}
+
+function applyRating(rating){
+  const cards=getCards();
+  const idx=cards.findIndex(c=>c.id===retQ[retIdx].id);
+  if(idx>=0){
+    cards[idx]=fsrs(cards[idx],rating);
+    cards[idx].lastReviewed=new Date().toISOString().split('T')[0];
+    saveCards(cards);
+    retQ[retIdx]={...retQ[retIdx],...cards[idx]};
+  }
+  if(rating>=4)retResults.gi++;else if(rating===3)retResults.pa++;else if(rating===2)retResults.mi++;else retResults.bl++;
+  const tc=(g('today-cleared')||0)+1;sv('today-cleared',tc);
+  const ws=g('ws')||{due:0,cleared:0};ws.cleared++;sv('ws',ws);
+  retIdx++;
+  if(retIdx<retQ.length)showCard();else showRetDone();
+}
+
+function showRetDone(){
+  document.getElementById('ret-card-view').style.display='none';
+  document.getElementById('ret-done').style.display='block';
+  const r=retResults;
+  document.getElementById('ret-summary').textContent=`Got It: ${r.gi} · Partial: ${r.pa} · Missed: ${r.mi} · Blackout: ${r.bl}`;
+  const ws=g('ws')||{sessions:0,due:0,cleared:0};ws.sessions=(ws.sessions||0)+1;sv('ws',ws);
+}
+
+function endRetrieve(){
+  if(cdInt)clearInterval(cdInt);retQ=[];retIdx=0;switchTab('session');
+}
+
+// REVIEW
+function renderReview(){
+  const ws=g('ws')||{sessions:0,due:0,cleared:0};
+  const total=(g('ret-total'))||0;
+  const gi=g('ret-gi')||0;
+  const pct=total?Math.round(gi/total*100):0;
+  const cp=ws.due>0?Math.round((ws.cleared||0)/ws.due*100):0;
+  document.getElementById('review-stats').innerHTML=`
+    <div class="stat-box"><div class="stat-num">${ws.sessions||0}</div><div class="stat-lbl">Sessions</div></div>
+    <div class="stat-box"><div class="stat-num">${ws.cleared||0}</div><div class="stat-lbl">Cards Reviewed</div></div>
+    <div class="stat-box"><div class="stat-num">${cp}%</div><div class="stat-lbl">Weekly Cleared</div></div>
+    <div class="stat-box"><div class="stat-num">${(g('streak')||{count:0}).count}</div><div class="stat-lbl">Day Streak</div></div>`;
+  renderCVP();
+  const saved=g('review')||{};
+  ['rq1','rq2','rq3','rq4'].forEach(k=>{const el=document.getElementById(k);if(el)el.value=saved[k]||'';});
+}
+
+function renderCVP(){
+  const subjs=getSubjs();const cards=getCards();
+  const rows=document.getElementById('cvp-rows');
+  if(!subjs.length||!cards.length){rows.innerHTML='<div style="font-size:13px;color:var(--ink3)">Complete retrievals to see gap analysis.</div>';return;}
+  let html='';
+  subjs.forEach(s=>{
+    const nodes=getAllNodes().filter(n=>n.sid===s.id);
+    const nids=nodes.map(n=>n.id);
+    const sc=cards.filter(c=>nids.includes(c.nodeId));
+    if(!sc.length)return;
+    const good=sc.filter(c=>c.ef>2.2&&c.interval>7).length;
+    const actual=Math.round(good/sc.length*100);
+    const self=g('conf-'+s.id)||50;
+    const gap=self-actual;
+    const gapStr=gap>20?`<span style="color:var(--red)">⚠ +${gap}% overconfident</span>`:gap<-10?`<span style="color:var(--green)">↑ underestimating</span>`:`<span style="color:var(--teal)">✓ Calibrated</span>`;
+    html+=`<div class="cvp-row"><span style="color:var(--ink2)">${s.name}</span><span>${gapStr}</span></div>`;
+  });
+  rows.innerHTML=html||'<div style="font-size:13px;color:var(--ink3)">No retrieval data yet.</div>';
+}
+
+function saveReview(){
+  const data={};['rq1','rq2','rq3','rq4'].forEach(k=>{data[k]=document.getElementById(k).value;});
+  sv('review',data);
+  if(data.rq4&&data.rq4.trim())sv('pinned-topic',data.rq4.trim());
+  sv('ws',{sessions:0,due:0,cleared:0});sv('today-cleared',0);
+  document.getElementById('rev-saved').style.display='block';
+  setTimeout(()=>document.getElementById('rev-saved').style.display='none',2000);
+}
+
+// MODALS
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+
+// DAILY RESET
+(()=>{const t=new Date().toISOString().split('T')[0];const lr=g('last-reset');if(lr!==t){sv('today-cleared',0);sv('last-reset',t);}})();
+
+// INIT
+renderSubjects();
+if(curEnergy)setEnergy(curEnergy);else updateRatioBar();
+renderGameStats();
+</script>
+</body>
+</html>
